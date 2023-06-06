@@ -1,11 +1,11 @@
 #include "Lexer.h"
 
-Lexer::Lexer(std::string file){
+Lexer::Lexer(std::string file) {
     filename = file;
     readFile();
 }
 
-void Lexer::readFile(){
+void Lexer::readFile() {
     std::ifstream file;
     file.open(filename);
     std::vector <std::string> lines;
@@ -21,23 +21,37 @@ void Lexer::readFile(){
         file.close();
     }
 
-    for (auto line : lines){
-        std::stringstream ss (line);
-        std::vector <std::string> NoSpaceLine;
-        while (getline (ss , line , ' ')){NoSpaceLine.push_back(line);}
-        for (auto phrase : NoSpaceLine){
-            if (phrase.length() < 2){tokens.push_back(createToken(phrase[0]));}
-            else{tokens.push_back(createToken(phrase));}
+    for (std::string line : lines){
+        std::vector <std::string> cleanLine = splitWithCustomDelimiters(line , " (){}+=*/^%");  // spaces , parens , math symbols    
+
+        for (auto phrase : cleanLine){
+            if (phrase.length() < 2){tokens.push_back(createToken(phrase[0]));}                 // character case
+            else{tokens.push_back(createToken(phrase));}                                        // full string check
         }
     }
 }
 
-Token Lexer::createToken(char c){
+std::vector<std::string> Lexer::splitWithCustomDelimiters(std::string s , std::string delimiters) {
+    std::vector<std::string> result;
+    std::size_t last_pos = 0;
+    for (std::size_t i = 0 ; i < s.size() ; ++i)
+    {
+        if ( delimiters.find(s[i]) != delimiters.npos)
+        {
+            result.push_back(s.substr(last_pos,i-last_pos));
+            ++i;
+            last_pos = i;
+        }
+    }
+
+    return result;
+}
+
+Token Lexer::createToken(char c) {
     TokenType type;
     char val = c;
 
-    switch (c)
-    {
+    switch (c){
     case ' ':
         type = TokenType::SPACE;
         break;
@@ -68,7 +82,7 @@ Token Lexer::createToken(char c){
     return t;
 }
 
-Token Lexer::createToken(std::string s){
+Token Lexer::createToken(std::string s) {
     TokenType type;
     std::string val = s;
 

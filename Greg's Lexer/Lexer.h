@@ -1,7 +1,6 @@
 #ifndef LEXER_H
 
 #include <string>
-#include <sstream>
 #include <typeinfo>
 #include <iostream>
 #include <vector>
@@ -24,18 +23,18 @@ typedef enum
 
 typedef struct Token
 {
-std::string value;
-TokenType type;
+    std::string value;
+    TokenType type;
 
-Token(){Token t; t.value = ""; t.type = TokenType::NIL;}
-Token(char value , TokenType type){Token t; t.value = value; t.type = type;}
-Token(std::string value , TokenType type){Token t; t.value = value; t.type = type;}
+    Token(){Token t; t.value = ""; t.type = TokenType::NIL;}
+    Token(char value , TokenType type){Token t; t.value = value; t.type = type;}
+    Token(std::string value , TokenType type){Token t; t.value = value; t.type = type;}
 
 
-friend std::ostream& operator<<(std::ostream& os, Token& t){
-    std::vector<std::string> TypeStrings = {"space", "left parenthesis", "right parenthesis", "left curly", "right curly" , "number",  "symbol", "variable", "letter", "identifier" , "null"};
-    return os << "Type: " << TypeStrings[t.type] << "\n Value: " << t.value << std::endl;
-}
+    friend std::ostream& operator<<(std::ostream& os, Token& t) {
+        std::vector<std::string> TypeStrings = {"space", "left parenthesis", "right parenthesis", "left curly", "right curly" , "number",  "symbol", "variable", "letter", "identifier" , "null"};
+        return os << "Type: " << TypeStrings[t.type] << "\n Value: " << t.value << std::endl;
+    }
 
 };
 
@@ -52,6 +51,8 @@ public:
     void readFile();
     Token createToken(char c);
     Token createToken(std::string phrase);
+private:
+    std::vector<std::string> splitWithCustomDelimiters(std::string s , std::string delimiters);
 };
 
 #endif // !LEXER_H
