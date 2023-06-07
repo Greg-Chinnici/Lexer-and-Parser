@@ -4,6 +4,7 @@
 #include <typeinfo>
 #include <iostream>
 #include <vector>
+#include <map>
 #include <fstream>
 
 typedef enum 
@@ -41,12 +42,13 @@ typedef struct Token
 
 class Lexer {
 public:
+    
+    Lexer(std::string filename);
+    
     std::string filename;
     std::string fileContents = "";
     std::vector<Token> tokens;
     int cursor = 0;
-
-    Lexer(std::string filename);
 
     void readFile();
     Token createToken(char c);

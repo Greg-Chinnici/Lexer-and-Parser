@@ -24,7 +24,7 @@ void Lexer::readFile() {
     for (std::string line : lines){
         std::vector <std::string> cleanLine = splitWithCustomDelimiters(line , " (){}+=*/^%");  // spaces , parens , math symbols    
 
-        for (auto phrase : cleanLine){
+        for (auto phrase : cleanLine){                                                          // create and store the token
             if (phrase.length() < 2){tokens.push_back(createToken(phrase[0]));}                 // character case
             else{tokens.push_back(createToken(phrase));}                                        // full string check
         }
@@ -39,7 +39,7 @@ std::vector<std::string> Lexer::splitWithCustomDelimiters(std::string s , std::s
         if ( delimiters.find(s[i]) != delimiters.npos)
         {
             result.push_back(s.substr(last_pos,i-last_pos));
-            ++i;
+            //++i;
             last_pos = i;
         }
     }
@@ -48,6 +48,7 @@ std::vector<std::string> Lexer::splitWithCustomDelimiters(std::string s , std::s
 }
 
 Token Lexer::createToken(char c) {
+
     TokenType type;
     char val = c;
 
@@ -72,10 +73,15 @@ Token Lexer::createToken(char c) {
         break;
     }
 
-    std::string mathSymbols = "+=*/^%";
-    if (mathSymbols.find(c) != std::string::npos){type = TokenType::SYMBOL;}
-
+{                                                                                                // math symbols
+    std::string mathSymbols = "+=*/^%";                                                        
+    if (mathSymbols.find(c) != std::string::npos){type = TokenType::SYMBOL;} 
+}
+    
+{                                                                                               // variables
     if (std::isalpha(c)){type = TokenType::VARIABLE;}
+}
+  
 
     Token t = Token(val, type);
     std::cout << t << std::endl;
@@ -86,8 +92,11 @@ Token Lexer::createToken(std::string s) {
     TokenType type;
     std::string val = s;
 
-    std::string identifers = " int  char  string  float  double  ";
-    if (identifers.find(" "+s+" ") != std::string::npos){type = TokenType::IDENTIFIER;} 
+    std::string identifers = " int  char  string  float  double ";                             // list of intentifiers (variable types)
+    if (identifers.find(" "+s+" ") != std::string::npos){type = TokenType::IDENTIFIER;}
+
+    std::map<std::string,int> identifersMAP = { {"int",1},  {"char",1},  {"string",1}, {"float",1},  {"double",1} }; // does the same thing but maybe faster???
+    if (identifersMAP.find(s) == identifersMAP.end()){type = TokenType::IDENTIFIER;}
 
     Token t = Token(val, type);
     std::cout << t << std::endl;
