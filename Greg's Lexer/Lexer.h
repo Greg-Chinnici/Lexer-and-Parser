@@ -26,15 +26,16 @@ typedef struct Token
 {
     std::string value;
     TokenType type;
+    int at; // only the index of the start in all of the chacters total, not the (Ln,Col) 
 
-    Token(){Token t; t.value = ""; t.type = TokenType::NIL;}
-    Token(char value , TokenType type){Token t; t.value = value; t.type = type;}
-    Token(std::string value , TokenType type){Token t; t.value = value; t.type = type;}
+    Token(){value = ""; type = TokenType::NIL; at = 0;}
+    Token(char v , TokenType t, int n){value = v; type = t; at = n;}
+    Token(std::string v , TokenType t, int n){value = v; type = t; at = n;}
 
 
     friend std::ostream& operator<<(std::ostream& os, Token& t) {
-        std::vector<std::string> TypeStrings = {"space", "left parenthesis", "right parenthesis", "left curly", "right curly" , "number",  "symbol", "variable", "letter", "identifier" , "null"};
-        return os << "Type: " << TypeStrings[t.type] << "\n Value: " << t.value << std::endl;
+        std::vector<std::string> TypeStrings = {"space", "left parenthesis", "right parenthesis", "left curly", "right curly", "number",  "symbol", "variable", "letter", "identifier", "null"};
+        return os << "Type: " << TypeStrings[t.type] << "\n Value: " << t.value << "\n At: " << t.at << std::endl;
     }
 
 };
