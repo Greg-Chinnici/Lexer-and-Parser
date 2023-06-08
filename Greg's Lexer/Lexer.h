@@ -7,7 +7,7 @@
 #include <map>
 #include <fstream>
 
-typedef enum 
+typedef enum TokenType
 {
     SPACE,
     L_PAREN,
@@ -20,13 +20,14 @@ typedef enum
     LETTER,
     IDENTIFIER,
     NIL
-} TokenType;
+};
 
 typedef struct Token
 {
     std::string value;
     TokenType type;
-    int at; // only the index of the start in all of the chacters total, not the (Ln,Col) 
+    // only the index of the start in all of the chacters total, not the (Ln,Col) 
+    int at;
 
     Token(){value = ""; type = TokenType::NIL; at = 0;}
     Token(char v , TokenType t, int n){value = v; type = t; at = n;}
@@ -34,10 +35,22 @@ typedef struct Token
 
 
     friend std::ostream& operator<<(std::ostream& os, Token& t) {
-        std::vector<std::string> TypeStrings = {"space", "left parenthesis", "right parenthesis", "left curly", "right curly", "number",  "symbol", "variable", "letter", "identifier", "null"};
+        std::vector<std::string> TypeStrings = {
+        "space",
+        "left parenthesis",
+        "right parenthesis",
+        "left curly",
+        "right curly",
+        "number",
+        "symbol",
+        "variable",
+        "letter",
+        "identifier",
+        "null"
+        };
+        
         return os << "Type: " << TypeStrings[t.type] << "\n Value: " << t.value << "\n At: " << t.at << std::endl;
     }
-
 };
 
 
