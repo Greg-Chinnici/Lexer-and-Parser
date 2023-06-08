@@ -1,0 +1,1 @@
+# for now i want it to read in cpp, later i want to make gregLang that compiles into something useable
