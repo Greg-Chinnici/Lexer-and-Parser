@@ -48,7 +48,7 @@ typedef struct Token
         "identifier",
         "null"
         };
-        
+
         return os << "Type: " << TypeStrings[t.type] << "\n Value: " << t.value << "\n At: " << t.at << std::endl;
     }
 };
@@ -67,6 +67,8 @@ public:
     void readFile();
     Token createToken(char c);
     Token createToken(std::string phrase);
+
+    void WhatIsAt(int cursorLocation);
 private:
     std::vector<std::string> splitWithCustomDelimiters(std::string s , std::string delimiters);
 };

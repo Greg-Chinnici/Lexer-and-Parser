@@ -27,7 +27,7 @@ void Lexer::readFile() {
         // current delimitters: spaces , parens , math symbols
         std::vector <std::string> cleanLine = splitWithCustomDelimiters(line , " (){}+=*/^%");  
 
-        // create and store the token
+        // create and store the token, also move the cursor
         for (auto phrase : cleanLine)                                                           
         {             
             // character case                                             
@@ -102,7 +102,7 @@ Token Lexer::createToken(char c) {
 Token Lexer::createToken(std::string s) {
     TokenType type = TokenType::VARIABLE;
     std::string val = s;
-
+   
     {
     // list of intentifiers (variable types)
     std::string identifers = " int  char  string  float  double ";
@@ -116,4 +116,15 @@ Token Lexer::createToken(std::string s) {
     Token t = Token(val, type, cursor);
     std::cout << t << std::endl;
     return t;
+}
+
+// will probobly have lots of error cases
+void Lexer::WhatIsAt(int c){
+    std::string restOfLine = "";
+    int at = c;
+    while(true){
+        if(fileContents[c] == '\n'){break;}
+        restOfLine += fileContents[c];
+    }
+    std::cout << "Line at " << at << ": " << restOfLine << std::endl;
 }
