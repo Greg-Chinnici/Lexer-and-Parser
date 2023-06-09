@@ -26,7 +26,7 @@ typedef struct Token
 {
     std::string value;
     TokenType type;
-    // only the index of the start in all of the chacters total, not the (Ln,Col) 
+    // only the index of the start in all of the characters total, not the (Ln,Col) 
     int at;
 
     Token(){value = ""; type = TokenType::NIL; at = 0;}
@@ -49,7 +49,7 @@ typedef struct Token
         "null"
         };
 
-        return os << "Type: " << TypeStrings[t.type] << "\n Value: " << t.value << "\n At: " << t.at << std::endl;
+        return os << "\n==============\n Type: " << TypeStrings[t.type] << "\n Value: " << t.value << "\n At: " << t.at << "\n============\n" << std::endl;
     }
 };
 
@@ -61,7 +61,7 @@ public:
     
     std::string filename;
     std::string fileContents = "";
-    std::vector<Token> tokens;
+    std::vector<std::vector<Token>> tokens;
     int cursor = 0;
 
     void readFile();

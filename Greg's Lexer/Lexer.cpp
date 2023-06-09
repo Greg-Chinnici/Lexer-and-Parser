@@ -14,6 +14,7 @@ void Lexer::readFile() {
     {
         std::string line;   
 
+
         std::ifstream fin(filename);
         while(getline(file,line))
         {
@@ -27,14 +28,19 @@ void Lexer::readFile() {
         // current delimitters: spaces , parens , math symbols
         std::vector <std::string> cleanLine = splitWithCustomDelimiters(line , " (){}+=*/^%");  
 
+        std::vector<Token> LineOfTokens;
+
         // create and store the token, also move the cursor
         for (auto phrase : cleanLine)                                                           
-        {             
+        {
+
             // character case                                             
-            if (phrase.length() < 2){tokens.push_back(createToken(phrase[0])); cursor++;}   
+            if (phrase.length() < 2){LineOfTokens.push_back(createToken(phrase[0])); cursor++;}   
             // full string case
-            else{tokens.push_back(createToken(phrase)); cursor+=phrase.length();}
+            else{LineOfTokens.push_back(createToken(phrase)); cursor+=phrase.length();}
         }
+
+        tokens.push_back(LineOfTokens);
     }
 }
 
@@ -105,12 +111,12 @@ Token Lexer::createToken(std::string s) {
    
     {
     // list of intentifiers (variable types)
-    std::string identifers = " int  char  string  float  double ";
-    if (identifers.find(" "+s+" ") != std::string::npos){type = TokenType::IDENTIFIER;}
+    std::string identifiers = " int  char  string  float  double ";
+    if (identifiers.find(" "+s+" ") != std::string::npos){type = TokenType::IDENTIFIER;}
 
     // does the same thing but maybe faster???
-    std::map<std::string,int> identifersMAP = { {"int",1},  {"char",1},  {"string",1}, {"float",1},  {"double",1} }; 
-    if (identifersMAP.find(s) == identifersMAP.end()){type = TokenType::IDENTIFIER;}
+    std::map<std::string,int> identifiersMAP = { {"int",1},  {"char",1},  {"string",1}, {"float",1},  {"double",1} }; 
+    if (identifiersMAP.find(s) == identifiersMAP.end()){type = TokenType::IDENTIFIER;}
     }
 
     Token t = Token(val, type, cursor);
@@ -118,13 +124,34 @@ Token Lexer::createToken(std::string s) {
     return t;
 }
 
-// will probobly have lots of error cases
+// will probably have lots of error cases
 void Lexer::WhatIsAt(int c){
-    std::string restOfLine = "";
-    int at = c;
-    while(true){
-        if(fileContents[c] == '\n'){break;}
-        restOfLine += fileContents[c];
+    int endOfLine = c;
+    while(true)
+    {
+        if (fileContents[endOfLine] == '\n'){break;}
+        endOfLine++;
     }
-    std::cout << "Line at " << at << ": " << restOfLine << std::endl;
+
+    int startOfLine = endOfLine-1;
+    while(true)
+    {
+        if (fileContents[startOfLine] == '\n'){break;}
+        startOfLine--;    
+    }
+
+    int lineCnt = 0;
+    for (int i = 0 ; i < fileContents.length() ; i++)
+    {
+        if (fileContents[i] == '\n'){lineCnt++;}
+        if (i == c){break;}
+    }
+
+    std::string restOfLine = fileContents.substr(startOfLine , endOfLine-startOfLine);
+
+    std::cout << "Line at " << lineCnt << ": " << restOfLine << std::endl;
+    for (int i = 0 ; i < tokens[lineCnt].size() ; i++)
+    {
+        std::cout << tokens[lineCnt][i] << std::endl;
+    }
 }
